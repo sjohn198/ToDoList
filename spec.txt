@@ -1,0 +1,23 @@
+Features:
+1. Comprehensive list of all tasks w/ their due dates.
+    - Needs some sort of access to system clock
+2. "My Day"-esque page for current tasks for a work session.
+    - Tasks due today will default to being here
+3. Undated lists feature, e.g. grocery lists
+4. Retro arcadey visuals
+5. Search tasks and lists
+6. Group tasks by job, class, etc.
+    -Maybe color code
+7. Completed tasks list and when they were completed.
+
+
+
+Problems w/ Microsoft ToDo:
+1. Default tasks are not created with a due date. Most tasks have a due date so that should be the default
+2. Can put tasks into groups but those groups get isolated from the rest.
+
+
+Extra:
+1. Sync with Email
+2. Calendar/Visualization Feature 
+    -Not really a time associated w/ each task so not a perfect fit

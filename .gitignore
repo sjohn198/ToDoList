@@ -1,0 +1,12 @@
+#any files related to cmake besides original script
+Makefile
+CMakeFiles
+*.cmake
+CMakeCache.txt
+compile_commands.json
+
+#executable
+todolist
+
+#ftxui docs
+arthursonzogni.github.io
