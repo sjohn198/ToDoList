@@ -1,7 +1,6 @@
 #include <iostream>
-#include <vector>
-#include <string>
-#include <array>
+
+#include "disk_operations.h"
 
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/dom/elements.hpp>
@@ -18,11 +17,27 @@ int main() {
     std::vector<std::string> tasks;
     std::vector<char> states;
 
+    std::string save_file = "tasks.txt";
+
+    load_from_disk(tasks, states, save_file);
+
+    for (auto &t : tasks) {
+        std::cout << "Saved task: " << t << std::endl;
+    }
+
     std::string new_task;
 
     InputOption input_opt = InputOption::Default();
 
     auto checkbox_container = Container::Vertical({});
+    for (int i = 0; i < tasks.size(); i++) {
+        bool* flag = reinterpret_cast<bool*>(&states[i]);
+
+        checkbox_container->Add(
+            Checkbox(tasks[i], flag)
+        );
+    }
+
     auto input_container = Container::Vertical({});
 
     input_opt.on_enter = [&] {
@@ -55,13 +70,10 @@ int main() {
                 | border;   
     });
 
-    auto screen = ScreenInteractive::FitComponent();
+    auto screen = ScreenInteractive::TerminalOutput();
     screen.Loop(renderer);
 
-    for (size_t i = 0; i < tasks.size(); ++i) {
-        std::cout << (states[i] ? "[x] " : "[ ] ")
-                << tasks[i] << "\n";
-    }
+    save_to_disk(tasks, states, save_file);
 
     return 0;
 }
