@@ -1,6 +1,7 @@
 #include <iostream>
-#include <array>
+#include <vector>
 #include <string>
+#include <array>
 
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/dom/elements.hpp>
@@ -14,36 +15,53 @@
 using namespace ftxui;
 
 int main() {
-    /*CHECKBOX EXAMPLE*/
-    // bool task_completed = false;
-    
-    // auto container = Container::Vertical({
-    //     Checkbox("Completed?", &task_completed)
-    // });
+    std::vector<std::string> tasks;
+    std::vector<char> states;
 
-    // auto screen = ScreenInteractive::FitComponent(); //ignore this red line
-    // screen.Loop(container);
-    // //Render(screen, document);
-    // //screen.Print();
+    std::string new_task;
 
-    // std::cout << "---" << std::endl;
-    // std::cout << "Completed? " << task_completed << std::endl;
-    // std::cout << "---" << std::endl;
+    InputOption input_opt = InputOption::Default();
 
-    /*CHECKBOX_IN_FRAME EXAMPLE*/
-    std::array<bool, 30> states;
+    auto checkbox_container = Container::Vertical({});
+    auto input_container = Container::Vertical({});
 
-    auto container = Container::Vertical({});
-    for (int i = 0; i < 30; i++) {
-        states[i] = false;
-        container->Add(Checkbox("Checkbox #" + std::to_string(i), &states[i]));
-    }
+    input_opt.on_enter = [&] {
+        if (!new_task.empty()){
+            tasks.push_back(new_task);
+            states.push_back(0);
 
-    auto renderer = Renderer(container, [&] {
-        return container->Render() | vscroll_indicator | frame | size(HEIGHT, LESS_THAN, 10) | border;
+            bool* flag = reinterpret_cast<bool*>(&states.back());
+
+            checkbox_container->Add(
+                Checkbox(new_task, flag)
+            );
+            new_task.clear();
+        }
+    };
+
+    auto input = Input(&new_task, "Add a task...", input_opt);
+    input_container->Add(input);
+
+    auto main_container = Container::Vertical({
+        checkbox_container,
+        input_container
+    });
+
+    auto renderer = Renderer(main_container, [&] {
+        return main_container->Render()
+                | vscroll_indicator
+                | frame
+                | size(HEIGHT, LESS_THAN, 10)
+                | border;   
     });
 
     auto screen = ScreenInteractive::FitComponent();
     screen.Loop(renderer);
+
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        std::cout << (states[i] ? "[x] " : "[ ] ")
+                << tasks[i] << "\n";
+    }
+
     return 0;
 }

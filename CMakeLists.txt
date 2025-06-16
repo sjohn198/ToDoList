@@ -13,7 +13,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(ftxui)
 
-add_executable(todolist main.cpp ui.cpp)
+add_executable(todolist main.cpp)
 
 target_compile_options(todolist PRIVATE -g -Wall)
 
